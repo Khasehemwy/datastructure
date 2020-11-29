@@ -32,6 +32,7 @@ class Citys {
     int cityNumber;
     map<string, int>mp;
     int floydFinished = 0;
+    // int changed=0;
 public:
     vector<City>citys;
 
@@ -49,4 +50,5 @@ public:
 
     int  findFastestPath();
     int  findCheapestPath();
+    // int  floyd();
 };

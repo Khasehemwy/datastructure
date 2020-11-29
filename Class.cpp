@@ -163,7 +163,7 @@ int Citys::findCheapestPath()
             if (mk == 1)printf("The cheapest path from A to B by airplane is:\n");
             if (mk == 2)printf("The cheapest path from A to B by train is:\n");
             queue<int>q1; q1.push(mp[endingPoint]);
-            vector<string>ans;
+            vector<string>ans;ans.clear();
             while (!q1.empty())
             {
                 int x = q1.front(); q1.pop();
@@ -175,11 +175,83 @@ int Citys::findCheapestPath()
             for (int i = ans.size() - 1; i > 0; i--) {
                 cout << ans[i] << "->";
             }
-            cout << ans[0] << "\n";
+            if(!ans.empty()) cout << ans[0] << "\n";
+            else cout<< "Not exist! \n";
         }
     }
-
 }
+int Citys::findFastestPath()
+{
+    printf("Enter the start and end of the path:\n(Separate with spaces or newlines)\n");
+    string startingPoint, endingPoint;
+    cin >> startingPoint >> endingPoint;
+    if (!this->mp[startingPoint]) { return -1; }
+
+    if (this->floydFinished)
+    {
+        //TODO
+    }
+    else
+    {
+        double transitTime[3]={0,2,1};
+        for (int mk = 1; mk <= 2; mk++)
+        {
+            int n = this->citys.size() - 1;
+            for (int i = 1; i <= n; i++) {
+                this->citys[i].dis[mk] = INF;
+                this->citys[i].vis = 0;
+            }
+            this->citys[mp[startingPoint]].dis[mk] = 0;
+
+            priority_queue<Int>q; q.push({ startingPoint,mp[startingPoint],0 });
+            while (!q.empty())
+            {
+                Int now = q.top(); q.pop();
+                if (this->citys[now.id].vis)continue;
+                this->citys[now.id].vis = 1;
+                for (auto& to : this->citys[now.id].path[1]) {
+                    if (this->citys[now.id].dis[mk] + to.time + transitTime[mk] < this->citys[mp[to.endingPoint]].dis[mk]) {
+                        this->citys[mp[to.endingPoint]].dis[mk] = this->citys[now.id].dis[mk] + to.time + transitTime[mk];
+                        this->citys[mp[to.endingPoint]].fromWhichCity = now.name;
+                        q.push({ to.endingPoint,mp[to.endingPoint],this->citys[mp[to.endingPoint]].dis[mk] });
+                    }
+                }
+            }
+
+            if (mk == 1)printf("The cheapest path from A to B by airplane is:\n");
+            if (mk == 2)printf("The cheapest path from A to B by train is:\n");
+            queue<int>q1; q1.push(mp[endingPoint]);
+            vector<string>ans;ans.clear();
+            while (!q1.empty())
+            {
+                int x = q1.front(); q1.pop();
+                ans.push_back(this->citys[x].name);
+                if (this->citys[mp[this->citys[x].fromWhichCity]].dis[mk] != 0)
+                    q1.push(mp[this->citys[x].fromWhichCity]);
+            }
+            ans.push_back(startingPoint);
+            for (int i = ans.size() - 1; i > 0; i--) {
+                cout << ans[i] << "->";
+            }
+            if(!ans.empty()) cout << ans[0] << "\n";
+            else cout<< "Not exist! \n";
+        }
+    }
+}
+
+// int  Citys::floyd()
+// {
+//     int a[100][100];
+//     for(int k=1;k<=n;k++){
+//         for(int i=1;i<=n;i++){
+//             for(int j=1;j<=n;j++){
+//                 a[i][j] = min(a[i][j],a[i][k]+a[k][j]);
+//             }
+//         }
+//     }
+//     return 1;
+// }
+
 
 //*-----------------------------------------------------------------------*/
 

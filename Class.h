@@ -22,6 +22,7 @@ public:
     //map[mode,paths];
 
     double dis[5];
+    double totalCost,totalTime;
     string fromWhichCity;
     int vis;
 
@@ -48,7 +49,7 @@ public:
     int  revisePath();
     int  erasePath();
 
-    int  findFastestPath();
     int  findCheapestPath();
+    int  findFastestPath();
     // int  floyd();
 };

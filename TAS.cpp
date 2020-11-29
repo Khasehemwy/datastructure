@@ -3,11 +3,20 @@
 
 int main()
 {
+    // IOS
+    // freopen("./data.in","r",stdin);
+    // freopen("./out.out","w",stdout);
+
     Citys city;
     while (1)
     {
-        printf("Enter number to select function:\n");
-        printf("1.addCityByNumber\n"
+        printf(
+            "\n------------------------------\n"
+            "Enter number to select function:\n\n"
+            );
+        printf(
+            // "------------------------------\n"
+            "1.addCityByNumber\n"
             "2.addCity\n"
             "3.reviseCityName\n"
             "4.eraseCity\n"
@@ -15,7 +24,10 @@ int main()
             "6.revisePath\n"
             "7.erasePath\n"
             "8.findCheapestPath\n"
-            "-1.esc\n");
+            "9.findFastestPath\n"
+            "\n-1.esc\n"
+            "------------------------------\n"
+            );
         int opCode; cin >> opCode;
         switch (opCode)
         {
@@ -42,6 +54,9 @@ int main()
             break;
         case 8:
             city.findCheapestPath();
+            break;
+        case 9:
+            city.findFastestPath();
             break;
         case -1:
             return 0;

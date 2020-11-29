@@ -16,7 +16,7 @@ Citys::Citys()
 
 void Citys::addCityByNumber()
 {
-    printf("Enter the number of cities:");
+    printf("Enter the number of cities : ");
     cin >> this->cityNumber;
     for (int i = 1; i <= cityNumber; i++) {
         this->addCity();
@@ -25,7 +25,7 @@ void Citys::addCityByNumber()
 void Citys::addCity()
 {
     City city;
-    printf("Enter city name:");
+    printf("Enter city name : ");
     cin >> city.name;
     this->citys.push_back(city);
     this->mp[city.name] = this->citys.size() - 1;
@@ -33,10 +33,10 @@ void Citys::addCity()
 
 int Citys::reviseCityName()
 {
-    printf("Enter the name of the city to be modified:");
+    printf("Enter the name of the city to be modified : ");
     string originalName; cin >> originalName;
     if (!mp[originalName]) { printf("Error. Input error\n"); return 0; }
-    printf("Enter the modified name:");
+    printf("Enter the modified name : ");
     string reviseName; cin >> reviseName;
     this->citys[mp[originalName]].name = reviseName;
     mp[reviseName] = mp[originalName];
@@ -46,7 +46,7 @@ int Citys::reviseCityName()
 
 int Citys::eraseCity()
 {
-    printf("Enter the name of the deleted city:");
+    printf("Enter the name of the deleted city : ");
     string name; cin >> name;
     if (!mp[name]) { printf("Error. Input error\n"); return 0; }
     mp.erase(mp.find(name));
@@ -85,7 +85,7 @@ int Citys::addPath()
 
 int Citys::revisePath()
 {
-    printf("Enter the information of the path to be modified:\n");
+    printf("Enter the information of the path to be modified : \n");
     Path targetPath;
     targetPath.inputInfo();
     if (!mp[targetPath.startingPoint]) { return -1; }
@@ -93,7 +93,7 @@ int Citys::revisePath()
     int indexOfPath = this->citys[indexOfCity].findPath(targetPath);
     if (indexOfPath == -1) { return -1; }
     printf("Find the target path.\n");
-    printf("Enter the information that needs to be modified for the path:\n");
+    printf("Enter the information that needs to be modified for the path : \n");
     targetPath.inputInfo();
     this->citys[indexOfCity].path[targetPath.mode][indexOfPath] = targetPath;
     return 1;
@@ -101,7 +101,7 @@ int Citys::revisePath()
 
 int Citys::erasePath()
 {
-    printf("Enter the information of the path to be Erased:\n");
+    printf("Enter the information of the path to be Erased : \n");
     Path targetPath;
     targetPath.inputInfo();
     if (!mp[targetPath.startingPoint]) { return -1; }
@@ -136,12 +136,14 @@ int Citys::findCheapestPath()
     }
     else
     {
+        double transitTime[3]={0,2,1};
         for (int mk = 1; mk <= 2; mk++)
         {
             int n = this->citys.size() - 1;
             for (int i = 1; i <= n; i++) {
                 this->citys[i].dis[mk] = INF;
                 this->citys[i].vis = 0;
+                this->citys[i].totalCost=this->citys[i].totalTime=0;
             }
             this->citys[mp[startingPoint]].dis[mk] = 0;
 
@@ -151,17 +153,24 @@ int Citys::findCheapestPath()
                 Int now = q.top(); q.pop();
                 if (this->citys[now.id].vis)continue;
                 this->citys[now.id].vis = 1;
-                for (auto& to : this->citys[now.id].path[1]) {
+                for (auto& to : this->citys[now.id].path[mk]) {
                     if (this->citys[now.id].dis[mk] + to.cost < this->citys[mp[to.endingPoint]].dis[mk]) {
                         this->citys[mp[to.endingPoint]].dis[mk] = this->citys[now.id].dis[mk] + to.cost;
                         this->citys[mp[to.endingPoint]].fromWhichCity = now.name;
+                        this->citys[mp[to.endingPoint]].totalCost = this->citys[now.id].totalCost+to.cost;
+                        this->citys[mp[to.endingPoint]].totalTime = this->citys[now.id].totalTime+to.time+transitTime[mk];
                         q.push({ to.endingPoint,mp[to.endingPoint],this->citys[mp[to.endingPoint]].dis[mk] });
                     }
                 }
             }
 
-            if (mk == 1)printf("The cheapest path from A to B by airplane is:\n");
-            if (mk == 2)printf("The cheapest path from A to B by train is:\n");
+            if (mk == 1)printf("The cheapest path from A to B by airplane is : \n");
+            if (mk == 2)printf("The cheapest path from A to B by train is : \n");
+
+            if(this->citys[mp[endingPoint]].dis[mk]==INF){
+                cout<< "Not exist! \n";continue;
+            }
+
             queue<int>q1; q1.push(mp[endingPoint]);
             vector<string>ans;ans.clear();
             while (!q1.empty())
@@ -175,14 +184,18 @@ int Citys::findCheapestPath()
             for (int i = ans.size() - 1; i > 0; i--) {
                 cout << ans[i] << "->";
             }
-            if(!ans.empty()) cout << ans[0] << "\n";
-            else cout<< "Not exist! \n";
+            if(!ans.empty()){
+                cout << ans[0] << "\n";
+
+                printf("Cost of money : %lf\n",this->citys[mp[endingPoint]].totalCost);
+                printf("Cost of time : %lf\n",this->citys[mp[endingPoint]].totalTime);
+            }
         }
     }
 }
 int Citys::findFastestPath()
 {
-    printf("Enter the start and end of the path:\n(Separate with spaces or newlines)\n");
+    printf("Enter the start and end of the path : \n(Separate with spaces or newlines)\n");
     string startingPoint, endingPoint;
     cin >> startingPoint >> endingPoint;
     if (!this->mp[startingPoint]) { return -1; }
@@ -200,6 +213,7 @@ int Citys::findFastestPath()
             for (int i = 1; i <= n; i++) {
                 this->citys[i].dis[mk] = INF;
                 this->citys[i].vis = 0;
+                this->citys[i].totalCost=this->citys[i].totalTime=0;
             }
             this->citys[mp[startingPoint]].dis[mk] = 0;
 
@@ -209,17 +223,24 @@ int Citys::findFastestPath()
                 Int now = q.top(); q.pop();
                 if (this->citys[now.id].vis)continue;
                 this->citys[now.id].vis = 1;
-                for (auto& to : this->citys[now.id].path[1]) {
+                for (auto& to : this->citys[now.id].path[mk]) {
                     if (this->citys[now.id].dis[mk] + to.time + transitTime[mk] < this->citys[mp[to.endingPoint]].dis[mk]) {
                         this->citys[mp[to.endingPoint]].dis[mk] = this->citys[now.id].dis[mk] + to.time + transitTime[mk];
                         this->citys[mp[to.endingPoint]].fromWhichCity = now.name;
+                        this->citys[mp[to.endingPoint]].totalCost = this->citys[now.id].totalCost+to.cost;
+                        this->citys[mp[to.endingPoint]].totalTime = this->citys[now.id].totalTime+to.time+transitTime[mk];
                         q.push({ to.endingPoint,mp[to.endingPoint],this->citys[mp[to.endingPoint]].dis[mk] });
                     }
                 }
             }
 
-            if (mk == 1)printf("The cheapest path from A to B by airplane is:\n");
-            if (mk == 2)printf("The cheapest path from A to B by train is:\n");
+            if (mk == 1)printf("The fastest path from A to B by airplane is : \n");
+            if (mk == 2)printf("The fastest path from A to B by train is : \n");
+
+            if(this->citys[mp[endingPoint]].dis[mk]==INF){
+                cout<< "Not exist! \n";continue;
+            }
+
             queue<int>q1; q1.push(mp[endingPoint]);
             vector<string>ans;ans.clear();
             while (!q1.empty())
@@ -233,8 +254,12 @@ int Citys::findFastestPath()
             for (int i = ans.size() - 1; i > 0; i--) {
                 cout << ans[i] << "->";
             }
-            if(!ans.empty()) cout << ans[0] << "\n";
-            else cout<< "Not exist! \n";
+            if(!ans.empty()){
+                cout << ans[0] << "\n";
+
+                printf("Cost of money : %lf\n",this->citys[mp[endingPoint]].totalCost);
+                printf("Cost of time : %lf\n",this->citys[mp[endingPoint]].totalTime);
+            }
         }
     }
 }
@@ -285,17 +310,17 @@ int City::findPath(Path& targetPath)
 //*------------------------------Path-------------------------------------*/
 int Path::inputInfo()
 {
-    printf("Enter the startingPoint:\n");
+    printf("Enter the startingPoint : \n");
     cin >> this->startingPoint;
-    printf("Enter the endingPoint:\n");
+    printf("Enter the endingPoint : \n");
     cin >> this->endingPoint;
-    printf("Enter the travel mode (1 for airplane and 2 for train):\n");
+    printf("Enter the travel mode (1 for airplane and 2 for train) : \n");
     cin >> this->mode;
-    printf("Enter the lenth:\n");
+    printf("Enter the lenth : \n");
     cin >> this->lenth;
-    printf("Enter the cost of money:\n");
+    printf("Enter the cost of money : \n");
     cin >> this->cost;
-    printf("Enter the time:\n");
+    printf("Enter the time : \n");
     cin >> this->time;
     return 0;
 }

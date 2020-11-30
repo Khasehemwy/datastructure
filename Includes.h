@@ -15,5 +15,4 @@
 #include<queue>
 using namespace std;
 
- #include "Class.h"
-
+#include "Class.h"

@@ -7,7 +7,7 @@ class Citys;
 class Path;
 
 class Path {
-public:
+   public:
     int mode;
     string startingPoint, endingPoint;
     double lenth, cost, time;
@@ -16,13 +16,13 @@ public:
 };
 
 class City {
-public:
+   public:
     string name;
-    map<int, vector<Path> >path;
-    //map[mode,paths];
+    map<int, vector<Path> > path;
+    // map[mode,paths];
 
     double dis[5];
-    double totalCost,totalTime;
+    double totalCost, totalTime;
     string fromWhichCity;
     int vis;
 
@@ -31,25 +31,25 @@ public:
 
 class Citys {
     int cityNumber;
-    map<string, int>mp;
+    map<string, int> mp;
     int floydFinished = 0;
     // int changed=0;
-public:
-    vector<City>citys;
+   public:
+    vector<City> citys;
 
     Citys();
 
     // void scanCityNumber();
     void addCityByNumber();
     void addCity();
-    int  reviseCityName();
-    int  eraseCity();
+    int reviseCityName();
+    int eraseCity();
 
-    int  addPath();
-    int  revisePath();
-    int  erasePath();
+    int addPath();
+    int revisePath();
+    int erasePath();
 
-    int  findCheapestPath();
-    int  findFastestPath();
+    int findCheapestPath();
+    int findFastestPath();
     // int  floyd();
 };

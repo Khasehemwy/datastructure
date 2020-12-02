@@ -1,5 +1,4 @@
-#pragma once
-#include "includes.h"
+#include "Include.h"
 
 // void Citys::scanCityNumber()
 // {
@@ -13,17 +12,9 @@ Citys::Citys() {
     //
 }
 
-void Citys::addCityByNumber() {
-    printf("Enter the number of cities : ");
-    cin >> this->cityNumber;
-    for (int i = 1; i <= cityNumber; i++) {
-        this->addCity();
-    }
-}
-void Citys::addCity() {
+void Citys::addCity(string name) {
     City city;
-    printf("Enter city name : ");
-    cin >> city.name;
+    city.name = name;
     this->citys.push_back(city);
     this->mp[city.name] = this->citys.size() - 1;
 }

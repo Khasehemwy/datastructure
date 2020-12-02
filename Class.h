@@ -1,10 +1,7 @@
 #pragma once
 // #include<bits/stdc++.h>
 // using namespace std;
-
-class City;
-class Citys;
-class Path;
+#include "Include.h"
 
 class Path {
    public:
@@ -39,9 +36,7 @@ class Citys {
 
     Citys();
 
-    // void scanCityNumber();
-    void addCityByNumber();
-    void addCity();
+    void addCity(string name);
     int reviseCityName();
     int eraseCity();
 
@@ -53,3 +48,5 @@ class Citys {
     int findFastestPath();
     // int  floyd();
 };
+
+Citys citys;

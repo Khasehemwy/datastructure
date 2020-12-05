@@ -25,6 +25,8 @@ int main()
             "7.erasePath\n"
             "8.findCheapestPath\n"
             "9.findFastestPath\n"
+            "10.listCitys\n"
+            "11.listPathsOfOneCity\n"
             "\n-1.esc\n"
             "------------------------------\n"
             );
@@ -57,6 +59,12 @@ int main()
             break;
         case 9:
             city.findFastestPath();
+            break;
+        case 10:
+            city.listCitys();
+            break;
+        case 11:
+            city.listPathsOfOneCity();
             break;
         case -1:
             return 0;

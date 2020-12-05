@@ -14,21 +14,23 @@ Citys::Citys()
     //
 }
 
-void Citys::addCityByNumber()
+int Citys::addCityByNumber()
 {
     printf("Enter the number of cities : ");
     cin >> this->cityNumber;
     for (int i = 1; i <= cityNumber; i++) {
         this->addCity();
     }
+    return 1;
 }
-void Citys::addCity()
+int Citys::addCity()
 {
     City city;
     printf("Enter city name : ");
     cin >> city.name;
     this->citys.push_back(city);
     this->mp[city.name] = this->citys.size() - 1;
+    return 1;
 }
 
 int Citys::reviseCityName()
@@ -49,6 +51,10 @@ int Citys::eraseCity()
     printf("Enter the name of the deleted city : ");
     string name; cin >> name;
     if (!mp[name]) { printf("Error. Input error\n"); return 0; }
+    int indexOfEraseCity=mp[name];
+    vector<City>::iterator it=this->citys.begin();
+    for(int i=1;i<=indexOfEraseCity;i++)it++;
+    this->citys.erase(it);
     mp.erase(mp.find(name));
     return 1;
 }
@@ -81,6 +87,7 @@ int Citys::addPath()
     tmpPath.lenth = distance; tmpPath.cost = cost; tmpPath.time = time;
 
     citys[startingIndex].path[mode].push_back(tmpPath);
+    return 1;
 }
 
 int Citys::revisePath()
@@ -115,6 +122,23 @@ int Citys::erasePath()
     return 1;
 }
 
+int Citys::listCitys()
+{
+    printf("* The total number of cities is : ");cout<<this->citys.size()-1<<"\n\n";
+    printf("* The list of cities is:\n");
+    for(auto &city:this->citys){
+        cout<<city.name<<"\n";
+    }
+    return 1;
+}
+int Citys::listPathsOfOneCity()
+{
+    printf("Enter the name of the city to find the path : \n");
+    string name;cin>>name;
+    if(!mp[name]){printf("Error. Input error\n"); return 0;}
+    this->citys[mp[name]].listPaths();
+    return 1;
+}
 
 struct Int
 {
@@ -192,6 +216,7 @@ int Citys::findCheapestPath()
             }
         }
     }
+    return 1;
 }
 int Citys::findFastestPath()
 {
@@ -262,6 +287,7 @@ int Citys::findFastestPath()
             }
         }
     }
+    return 1;
 }
 
 // int  Citys::floyd()
@@ -300,6 +326,29 @@ int City::findPath(Path& targetPath)
     }
     return -1;
 }
+
+int City::listPaths()
+{
+    vector<string>WayOfTravel;
+    WayOfTravel.push_back("guard");////Let vector start at 1
+    WayOfTravel.push_back("airplane");
+    WayOfTravel.push_back("train");
+    for(int i=1;i<WayOfTravel.size();i++)
+    {
+        cout<<"* The paths to use the "<<WayOfTravel[i]<<" are : \n";
+        for(auto& j:this->path[i]){
+            cout<<this->name<<" -> "<<j.endingPoint<<" : \n";
+            cout<<"The lenth : "<<j.lenth<<"\n";
+            cout<<"The cost of money : "<<j.cost<<"\n";
+            cout<<"The cost of time : "<<j.time<<"\n\n";
+        }
+        if(this->path[i].size()==0){
+            cout<<"Not exist.\n";
+        }
+    }
+    return 1;
+}
+
 
 //*-----------------------------------------------------------------------*/
 

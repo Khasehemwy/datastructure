@@ -27,6 +27,7 @@ public:
     int vis;
 
     int findPath(Path& targetPath);
+    int listPaths();
 };
 
 class Citys {
@@ -40,14 +41,17 @@ public:
     Citys();
 
     // void scanCityNumber();
-    void addCityByNumber();
-    void addCity();
+    int  addCityByNumber();
+    int  addCity();
     int  reviseCityName();
     int  eraseCity();
 
     int  addPath();
     int  revisePath();
     int  erasePath();
+
+    int  listCitys();
+    int  listPathsOfOneCity();
 
     int  findCheapestPath();
     int  findFastestPath();

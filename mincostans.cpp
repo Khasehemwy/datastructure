@@ -16,8 +16,8 @@ mincostans::mincostans(QWidget *parent) :
             str+=(mans[i]);
             if(i!=0) str+="->";
         }
+        str += ((std::string)"\n"+"Time: "+mans[mans.size()-1]+"\nCost: "+mans[mans.size()-2]);
     }
-    str += ((std::string)"\n"+"Time: "+mans[mans.size()-1]+"\nCost: "+mans[mans.size()-2]);
     ui->label->setText(QString::fromStdString(str));
 }
 

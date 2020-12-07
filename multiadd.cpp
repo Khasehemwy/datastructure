@@ -16,9 +16,9 @@ multiadd::~multiadd()
 
 void multiadd::on_buttonBox_accepted()
 {
-    singleadd* sadd = new singleadd;
     for(int i=0;i<ui->number->text().toInt();i++) {
-        sadd->show();
+        singleadd* sadd = new singleadd;
+        sadd->exec();
     }
 }
 

@@ -19,7 +19,7 @@ mindist::~mindist()
 
 void mindist::on_buttonBox_accepted()
 {
-    mdans = cities.findCheapestPath(ui->start->text().toStdString(),ui->end->text().toStdString(),ui->method->currentIndex());
+    mdans = cities.findFastestPath(ui->start->text().toStdString(),ui->end->text().toStdString(),ui->method->currentIndex());
     mindistans* dans = new mindistans;
     dans->show();
 }

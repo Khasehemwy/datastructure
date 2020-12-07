@@ -158,6 +158,8 @@ vector<string> Citys::findCheapestPath(string start,string end,int mk) {
                     q1.push(mp[this->citys[x].fromWhichCity]);
             }
             ans.push_back(start);
+            ans.push_back(to_string(this->citys[mp[end]].totalCost));
+            ans.push_back(to_string(this->citys[mp[end]].totalTime-transitTime[mk]));
             return ans;
 }
 
@@ -219,6 +221,8 @@ vector<string> Citys::findFastestPath(string start,string end,int mk) {
                     q1.push(mp[this->citys[x].fromWhichCity]);
             }
             ans.push_back(start);
+            ans.push_back(to_string(this->citys[mp[end]].totalCost));
+            ans.push_back(to_string(this->citys[mp[end]].totalTime-transitTime[mk]));
             return ans;
     }
 }

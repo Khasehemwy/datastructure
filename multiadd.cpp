@@ -1,4 +1,5 @@
 #include "multiadd.h"
+#include "singleadd.h"
 #include "ui_multiadd.h"
 
 multiadd::multiadd(QWidget *parent) :
@@ -11,4 +12,17 @@ multiadd::multiadd(QWidget *parent) :
 multiadd::~multiadd()
 {
     delete ui;
+}
+
+void multiadd::on_buttonBox_accepted()
+{
+    singleadd* sadd = new singleadd;
+    for(int i=0;i<ui->number->text().toInt();i++) {
+        sadd->show();
+    }
+}
+
+void multiadd::on_buttonBox_rejected()
+{
+    this->destroy();
 }

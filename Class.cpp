@@ -19,72 +19,44 @@ void Citys::addCity(string name) {
     this->mp[city.name] = this->citys.size() - 1;
 }
 
-int Citys::reviseCityName() {
-    printf("Enter the name of the city to be modified : ");
-    string originalName;
-    cin >> originalName;
-    if (!mp[originalName]) {
-        printf("Error. Input error\n");
+int Citys::reviseCityName(string oldname, string newname) {
+    if (!mp[oldname]) {
         return 0;
     }
-    printf("Enter the modified name : ");
-    string reviseName;
-    cin >> reviseName;
-    this->citys[mp[originalName]].name = reviseName;
-    mp[reviseName] = mp[originalName];
-    mp.erase(mp.find(originalName));
+    this->citys[mp[oldname]].name = newname;
+    mp[newname] = mp[oldname];
+    mp.erase(mp.find(oldname));
     return 1;
 }
 
-int Citys::eraseCity() {
-    printf("Enter the name of the deleted city : ");
-    string name;
-    cin >> name;
+int Citys::eraseCity(string name) {
     if (!mp[name]) {
-        printf("Error. Input error\n");
         return 0;
     }
     mp.erase(mp.find(name));
     return 1;
 }
 
-int Citys::addPath() {
-    printf(
-        "Enter the start and end of the path:\n(Separate with spaces or "
-        "newlines)\n");
-    string startingPoint, endingPoint;
-    cin >> startingPoint >> endingPoint;
-    if (!mp[startingPoint]) {
-        printf("Error. Starting point does not exist.\n");
+int Citys::addPath(string start,string end,int mode,double dist,double cost,double time) {
+    if (!mp[start]) {
         return 0;
     }
-    if (!mp[endingPoint]) {
-        printf("Error. Ending point does not exist.\n");
+    if (!mp[end]) {
         return 0;
     }
-    int startingIndex, endingIndex;
-    startingIndex = mp[startingPoint];
-    endingIndex = mp[endingPoint];
-
-    printf("Enter the travel mode (1 for airplane and 2 for train)\n");
-    int mode;
-    cin >> mode;
-
-    printf(
-        "Enter the [distance, cost, time] of the path:\n(Separate with spaces "
-        "or newlines)\n");
-    double distance, cost, time;
-    cin >> distance >> cost >> time;
+    int startIndex, endIndex;
+    startIndex = mp[start];
+    endIndex = mp[end];
 
     Path tmpPath;
-    tmpPath.startingPoint = startingPoint;
-    tmpPath.endingPoint = endingPoint;
+    tmpPath.startingPoint = start;
+    tmpPath.endingPoint = end;
     tmpPath.mode = mode;
-    tmpPath.lenth = distance;
+    tmpPath.lenth = dist;
     tmpPath.cost = cost;
     tmpPath.time = time;
 
-    citys[startingIndex].path[mode].push_back(tmpPath);
+    citys[startIndex].path[mode].push_back(tmpPath);
     return 1;
 }
 
@@ -133,31 +105,22 @@ struct Int {
     double dis;
 };
 bool operator<(const Int& aa, const Int& bb) { return aa.dis > bb.dis; }
-int Citys::findCheapestPath() {
-    printf(
-        "Enter the start and end of the path:\n(Separate with spaces or "
-        "newlines)\n");
-    string startingPoint, endingPoint;
-    cin >> startingPoint >> endingPoint;
-    if (!this->mp[startingPoint]) {
-        return -1;
-    }
-
-    if (this->floydFinished) {
-        // TODO
-    } else {
+vector<string> Citys::findCheapestPath(string start,string end,int mk) {
+            vector<string> ans;
+            if (!mp[start]) {
+                return ans;
+            }
         double transitTime[3] = {0, 2, 1};
-        for (int mk = 1; mk <= 2; mk++) {
             int n = this->citys.size() - 1;
             for (int i = 1; i <= n; i++) {
                 this->citys[i].dis[mk] = INF;
                 this->citys[i].vis = 0;
                 this->citys[i].totalCost = this->citys[i].totalTime = 0;
             }
-            this->citys[mp[startingPoint]].dis[mk] = 0;
+            this->citys[mp[start]].dis[mk] = 0;
 
             priority_queue<Int> q;
-            q.push({startingPoint, mp[startingPoint], 0});
+            q.push({start, mp[start], 0});
             while (!q.empty()) {
                 Int now = q.top();
                 q.pop();
@@ -181,20 +144,12 @@ int Citys::findCheapestPath() {
                 }
             }
 
-            if (mk == 1)
-                printf("The cheapest path from A to B by airplane is : \n");
-            if (mk == 2)
-                printf("The cheapest path from A to B by train is : \n");
-
-            if (this->citys[mp[endingPoint]].dis[mk] == INF) {
-                cout << "Not exist! \n";
-                continue;
+            if (this->citys[mp[end]].dis[mk] == INF) {
+                return ans;
             }
 
             queue<int> q1;
-            q1.push(mp[endingPoint]);
-            vector<string> ans;
-            ans.clear();
+            q1.push(mp[end]);
             while (!q1.empty()) {
                 int x = q1.front();
                 q1.pop();
@@ -202,47 +157,29 @@ int Citys::findCheapestPath() {
                 if (this->citys[mp[this->citys[x].fromWhichCity]].dis[mk] != 0)
                     q1.push(mp[this->citys[x].fromWhichCity]);
             }
-            ans.push_back(startingPoint);
-            for (int i = ans.size() - 1; i > 0; i--) {
-                cout << ans[i] << "->";
-            }
-            if (!ans.empty()) {
-                cout << ans[0] << "\n";
-
-                printf("Cost of money : %lf\n",
-                       this->citys[mp[endingPoint]].totalCost);
-                printf("Cost of time : %lf\n",
-                       this->citys[mp[endingPoint]].totalTime);
-            }
-        }
-    }
-    return 1;
+            ans.push_back(start);
+            return ans;
 }
-int Citys::findFastestPath() {
-    printf(
-        "Enter the start and end of the path : \n(Separate with spaces or "
-        "newlines)\n");
-    string startingPoint, endingPoint;
-    cin >> startingPoint >> endingPoint;
-    if (!this->mp[startingPoint]) {
-        return -1;
-    }
 
+vector<string> Citys::findFastestPath(string start,string end,int mk) {
+                vector<string> ans;
+                if (!mp[start]) {
+                    return ans;
+                }
     if (this->floydFinished) {
         // TODO
     } else {
         double transitTime[3] = {0, 2, 1};
-        for (int mk = 1; mk <= 2; mk++) {
             int n = this->citys.size() - 1;
             for (int i = 1; i <= n; i++) {
                 this->citys[i].dis[mk] = INF;
                 this->citys[i].vis = 0;
                 this->citys[i].totalCost = this->citys[i].totalTime = 0;
             }
-            this->citys[mp[startingPoint]].dis[mk] = 0;
+            this->citys[mp[start]].dis[mk] = 0;
 
             priority_queue<Int> q;
-            q.push({startingPoint, mp[startingPoint], 0});
+            q.push({start, mp[start], 0});
             while (!q.empty()) {
                 Int now = q.top();
                 q.pop();
@@ -268,20 +205,12 @@ int Citys::findFastestPath() {
                 }
             }
 
-            if (mk == 1)
-                printf("The fastest path from A to B by airplane is : \n");
-            if (mk == 2)
-                printf("The fastest path from A to B by train is : \n");
-
-            if (this->citys[mp[endingPoint]].dis[mk] == INF) {
-                cout << "Not exist! \n";
-                continue;
+            if (this->citys[mp[end]].dis[mk] == INF) {
+                return ans;
             }
 
             queue<int> q1;
-            q1.push(mp[endingPoint]);
-            vector<string> ans;
-            ans.clear();
+            q1.push(mp[end]);
             while (!q1.empty()) {
                 int x = q1.front();
                 q1.pop();
@@ -289,21 +218,9 @@ int Citys::findFastestPath() {
                 if (this->citys[mp[this->citys[x].fromWhichCity]].dis[mk] != 0)
                     q1.push(mp[this->citys[x].fromWhichCity]);
             }
-            ans.push_back(startingPoint);
-            for (int i = ans.size() - 1; i > 0; i--) {
-                cout << ans[i] << "->";
-            }
-            if (!ans.empty()) {
-                cout << ans[0] << "\n";
-
-                printf("Cost of money : %lf\n",
-                       this->citys[mp[endingPoint]].totalCost);
-                printf("Cost of time : %lf\n",
-                       this->citys[mp[endingPoint]].totalTime);
-            }
-        }
+            ans.push_back(start);
+            return ans;
     }
-    return 1;
 }
 
 // int Citys::floyd()

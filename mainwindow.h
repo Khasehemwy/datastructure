@@ -18,6 +18,18 @@ public:
 private slots:
     void on_multiadd_clicked();
 
+    void on_singleadd_clicked();
+
+    void on_modify_clicked();
+
+    void on_removecity_clicked();
+
+    void on_addpath_clicked();
+
+    void on_mindist_clicked();
+
+    void on_mintime_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

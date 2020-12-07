@@ -16,5 +16,10 @@ singleadd::~singleadd()
 
 void singleadd::on_buttonBox_accepted()
 {
-    citys.addCity(ui->name->text().toStdString());
+    cities.addCity(ui->name->text().toStdString());
+}
+
+void singleadd::on_buttonBox_rejected()
+{
+    this->destroy();
 }

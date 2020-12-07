@@ -44,10 +44,13 @@ if(ANDROID)
     singleadd.cpp
     singleadd.h
     singleadd.ui
+    modifyname.cpp
+    modifyname.h
+    modifyname.ui
     ${TS_FILES}
   )
 else()
-  add_executable(untitled
+  add_executable(untitled WIN32
     main.cpp
     mainwindow.cpp
     mainwindow.h
@@ -61,6 +64,27 @@ else()
     singleadd.cpp
     singleadd.h
     singleadd.ui
+    modifyname.cpp
+    modifyname.h
+    modifyname.ui
+    removecity.cpp
+    removecity.h
+    removecity.ui
+    addpath.cpp
+    addpath.h
+    addpath.ui
+    mincost.cpp
+    mincost.h
+    mincost.ui
+    mincostans.cpp
+    mincostans.h
+    mincostans.ui
+    mindist.cpp
+    mindist.h
+    mindist.ui
+    mindistans.cpp
+    mindistans.h
+    mindistans.ui
     ${TS_FILES}
   )
 endif()

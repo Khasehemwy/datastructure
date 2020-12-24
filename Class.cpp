@@ -50,10 +50,10 @@ int Citys::addPath(string start, string end, int mode, double dist, double cost,
     endIndex = mp[end];
 
     Path tmpPath;
-    tmpPath.startingPoint = start;
-    tmpPath.endingPoint = end;
+    tmpPath.start = start;
+    tmpPath.end = end;
     tmpPath.mode = mode;
-    tmpPath.lenth = dist;
+    tmpPath.len = dist;
     tmpPath.cost = cost;
     tmpPath.time = time;
 
@@ -64,21 +64,21 @@ int Citys::addPath(string start, string end, int mode, double dist, double cost,
 int Citys::revisePath(string start, string end, int mode, double dist, double cost,
                       double time) {
     Path targetPath;
-    targetPath.startingPoint=start;
-    targetPath.endingPoint=end;
+    targetPath.start=start;
+    targetPath.end=end;
     targetPath.mode=mode;
-    if (!mp[targetPath.startingPoint]) {
+    if (!mp[targetPath.start]) {
         return -1;
     }
-    int indexOfCity = mp[targetPath.startingPoint];
+    int indexOfCity = mp[targetPath.start];
     int indexOfPath = this->citys[indexOfCity].findPath(targetPath);
     if (indexOfPath == -1) {
         return -1;
     }
-    targetPath.startingPoint=start;
-    targetPath.endingPoint=end;
+    targetPath.start=start;
+    targetPath.end=end;
     targetPath.mode=mode;
-    targetPath.lenth=dist;
+    targetPath.len=dist;
     targetPath.cost=cost;
     targetPath.time=time;
     this->citys[indexOfCity].path[targetPath.mode][indexOfPath] = targetPath;
@@ -87,13 +87,13 @@ int Citys::revisePath(string start, string end, int mode, double dist, double co
 
 int Citys::erasePath(string start,string end,int mode) {
     Path targetPath;
-    targetPath.startingPoint=start;
-    targetPath.endingPoint=end;
+    targetPath.start=start;
+    targetPath.end=end;
     targetPath.mode=mode;
-    if (!mp[targetPath.startingPoint]) {
+    if (!mp[targetPath.start]) {
         return -1;
     }
-    int indexOfCity = mp[targetPath.startingPoint];
+    int indexOfCity = mp[targetPath.start];
     int indexOfPath = this->citys[indexOfCity].findPath(targetPath);
     if (indexOfPath == -1) {
         return -1;
@@ -134,16 +134,16 @@ vector<string> Citys::findCheapestPath(string start, string end, int mk) {
         this->citys[now.id].vis = 1;
         for (auto& to : this->citys[now.id].path[mk]) {
             if (this->citys[now.id].dis[mk] + to.cost <
-                this->citys[mp[to.endingPoint]].dis[mk]) {
-                this->citys[mp[to.endingPoint]].dis[mk] =
+                this->citys[mp[to.end]].dis[mk]) {
+                this->citys[mp[to.end]].dis[mk] =
                     this->citys[now.id].dis[mk] + to.cost;
-                this->citys[mp[to.endingPoint]].fromWhichCity = now.name;
-                this->citys[mp[to.endingPoint]].totalCost =
+                this->citys[mp[to.end]].fromWhichCity = now.name;
+                this->citys[mp[to.end]].totalCost =
                     this->citys[now.id].totalCost + to.cost;
-                this->citys[mp[to.endingPoint]].totalTime =
+                this->citys[mp[to.end]].totalTime =
                     this->citys[now.id].totalTime + to.time + transitTime[mk];
-                q.push({to.endingPoint, mp[to.endingPoint],
-                        this->citys[mp[to.endingPoint]].dis[mk]});
+                q.push({to.end, mp[to.end],
+                        this->citys[mp[to.end]].dis[mk]});
             }
         }
     }
@@ -193,17 +193,17 @@ vector<string> Citys::findFastestPath(string start, string end, int mk) {
             this->citys[now.id].vis = 1;
             for (auto& to : this->citys[now.id].path[mk]) {
                 if (this->citys[now.id].dis[mk] + to.time + transitTime[mk] <
-                    this->citys[mp[to.endingPoint]].dis[mk]) {
-                    this->citys[mp[to.endingPoint]].dis[mk] =
+                    this->citys[mp[to.end]].dis[mk]) {
+                    this->citys[mp[to.end]].dis[mk] =
                         this->citys[now.id].dis[mk] + to.time + transitTime[mk];
-                    this->citys[mp[to.endingPoint]].fromWhichCity = now.name;
-                    this->citys[mp[to.endingPoint]].totalCost =
+                    this->citys[mp[to.end]].fromWhichCity = now.name;
+                    this->citys[mp[to.end]].totalCost =
                         this->citys[now.id].totalCost + to.cost;
-                    this->citys[mp[to.endingPoint]].totalTime =
+                    this->citys[mp[to.end]].totalTime =
                         this->citys[now.id].totalTime + to.time +
                         transitTime[mk];
-                    q.push({to.endingPoint, mp[to.endingPoint],
-                            this->citys[mp[to.endingPoint]].dis[mk]});
+                    q.push({to.end, mp[to.end],
+                            this->citys[mp[to.end]].dis[mk]});
                 }
             }
         }
@@ -254,10 +254,10 @@ std::ofstream& operator<<(std::ofstream& ostr, Citys& c) {
     for(int i=0;i<c.citys.size();i++) {
         for(int j=0;j<c.citys[i].path.size();j++) {
             for(int k=0;k<c.citys[i].path[j].size();k++) {
-                ostr<<c.citys[i].path[j][k].startingPoint<<" "
-                   <<c.citys[i].path[j][k].endingPoint<<" "
+                ostr<<c.citys[i].path[j][k].start<<" "
+                   <<c.citys[i].path[j][k].end<<" "
                    <<c.citys[i].path[j][k].mode<<" "
-                   <<c.citys[i].path[j][k].lenth<<" "
+                   <<c.citys[i].path[j][k].len<<" "
                    <<c.citys[i].path[j][k].cost<<" "
                    <<c.citys[i].path[j][k].time<<endl;
             }
@@ -288,7 +288,7 @@ int City::findPath(Path& targetPath)
 {
     for (int i = 0; i < this->path[targetPath.mode].size(); i++) {
         auto& checkingPath = path[targetPath.mode][i];
-        if (checkingPath.endingPoint == targetPath.endingPoint) {
+        if (checkingPath.end == targetPath.end) {
             return i;
         }
     }
@@ -300,14 +300,14 @@ int City::findPath(Path& targetPath)
 //*************************************************************************/
 //*------------------------------Path-------------------------------------*/
 int Path::inputInfo() {
-    printf("Enter the startingPoint : \n");
-    cin >> this->startingPoint;
-    printf("Enter the endingPoint : \n");
-    cin >> this->endingPoint;
+    printf("Enter the start : \n");
+    cin >> this->start;
+    printf("Enter the end : \n");
+    cin >> this->end;
     printf("Enter the travel mode (1 for airplane and 2 for train) : \n");
     cin >> this->mode;
-    printf("Enter the lenth : \n");
-    cin >> this->lenth;
+    printf("Enter the len : \n");
+    cin >> this->len;
     printf("Enter the cost of money : \n");
     cin >> this->cost;
     printf("Enter the time : \n");

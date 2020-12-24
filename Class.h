@@ -5,8 +5,8 @@ using namespace std;
 class Path {
    public:
     int mode;
-    string startingPoint, endingPoint;
-    double lenth, cost, time;
+    string start, end;
+    double len, cost, time;
 
     int inputInfo();
 };

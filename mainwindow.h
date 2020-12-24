@@ -30,6 +30,10 @@ private slots:
 
     void on_mintime_clicked();
 
+    void on_modifypath_clicked();
+
+    void on_deletepath_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

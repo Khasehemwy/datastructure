@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>684</width>
-    <height>627</height>
+    <width>598</width>
+    <height>452</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="multiadd">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>60</y>
+      <x>220</x>
+      <y>20</y>
       <width>171</width>
       <height>71</height>
      </rect>
@@ -30,47 +30,47 @@
    <widget class="QPushButton" name="singleadd">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>50</x>
       <y>130</y>
       <width>171</width>
       <height>71</height>
      </rect>
     </property>
     <property name="text">
-     <string>单个添加城市</string>
+     <string>添加城市</string>
     </property>
    </widget>
    <widget class="QPushButton" name="modify">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>200</y>
+      <x>220</x>
+      <y>130</y>
       <width>171</width>
       <height>71</height>
      </rect>
     </property>
     <property name="text">
-     <string>修改单个信息</string>
+     <string>修改城市</string>
     </property>
    </widget>
    <widget class="QPushButton" name="removecity">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>270</y>
+      <x>390</x>
+      <y>130</y>
       <width>171</width>
       <height>71</height>
      </rect>
     </property>
     <property name="text">
-     <string>删除单个城市</string>
+     <string>删除城市</string>
     </property>
    </widget>
    <widget class="QPushButton" name="addpath">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>340</y>
+      <x>50</x>
+      <y>240</y>
       <width>171</width>
       <height>71</height>
      </rect>
@@ -82,8 +82,8 @@
    <widget class="QPushButton" name="mintime">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>410</y>
+      <x>130</x>
+      <y>350</y>
       <width>171</width>
       <height>71</height>
      </rect>
@@ -95,14 +95,40 @@
    <widget class="QPushButton" name="mindist">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>480</y>
+      <x>300</x>
+      <y>350</y>
       <width>171</width>
       <height>71</height>
      </rect>
     </property>
     <property name="text">
      <string>花费最少路径</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="modifypath">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>240</y>
+      <width>171</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>修改路径</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="deletepath">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>240</y>
+      <width>171</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>删除路径</string>
     </property>
    </widget>
   </widget>

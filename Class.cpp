@@ -61,10 +61,12 @@ int Citys::addPath(string start, string end, int mode, double dist, double cost,
     return 1;
 }
 
-int Citys::revisePath() {
-    printf("Enter the information of the path to be modified : \n");
+int Citys::revisePath(string start, string end, int mode, double dist, double cost,
+                      double time) {
     Path targetPath;
-    targetPath.inputInfo();
+    targetPath.startingPoint=start;
+    targetPath.endingPoint=end;
+    targetPath.mode=mode;
     if (!mp[targetPath.startingPoint]) {
         return -1;
     }
@@ -73,17 +75,21 @@ int Citys::revisePath() {
     if (indexOfPath == -1) {
         return -1;
     }
-    printf("Find the target path.\n");
-    printf("Enter the information that needs to be modified for the path : \n");
-    targetPath.inputInfo();
+    targetPath.startingPoint=start;
+    targetPath.endingPoint=end;
+    targetPath.mode=mode;
+    targetPath.lenth=dist;
+    targetPath.cost=cost;
+    targetPath.time=time;
     this->citys[indexOfCity].path[targetPath.mode][indexOfPath] = targetPath;
     return 1;
 }
 
-int Citys::erasePath() {
-    printf("Enter the information of the path to be Erased : \n");
+int Citys::erasePath(string start,string end,int mode) {
     Path targetPath;
-    targetPath.inputInfo();
+    targetPath.startingPoint=start;
+    targetPath.endingPoint=end;
+    targetPath.mode=mode;
     if (!mp[targetPath.startingPoint]) {
         return -1;
     }
@@ -92,7 +98,6 @@ int Citys::erasePath() {
     if (indexOfPath == -1) {
         return -1;
     }
-    printf("Find the target path.\n");
     vector<Path>::iterator it =
         this->citys[indexOfCity].path[targetPath.mode].begin();
     for (int i = 1; i <= indexOfPath; i++) it++;
@@ -281,13 +286,9 @@ std::ofstream& operator<<(std::ofstream& ostr, Citys& c) {
 int City::findPath(Path& targetPath)
 // Returns the index of the target path, if it does not exist, return -1.
 {
-    int mode = targetPath.mode;
-    for (int i = 0; i < this->path[mode].size(); i++) {
-        auto& checkingPath = path[mode][i];
-        if (checkingPath.endingPoint == targetPath.endingPoint &&
-            checkingPath.lenth == targetPath.lenth &&
-            checkingPath.cost == targetPath.cost &&
-            checkingPath.time == targetPath.time) {
+    for (int i = 0; i < this->path[targetPath.mode].size(); i++) {
+        auto& checkingPath = path[targetPath.mode][i];
+        if (checkingPath.endingPoint == targetPath.endingPoint) {
             return i;
         }
     }

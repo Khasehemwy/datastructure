@@ -6,6 +6,8 @@
 #include "addpath.h"
 #include "mincost.h"
 #include "mindist.h"
+#include "modifypath.h"
+#include "erasepath.h"
 #include "./ui_mainwindow.h"
 #include "Class.h"
 
@@ -66,4 +68,16 @@ void MainWindow::on_mintime_clicked()
 {
     mindist* dist = new mindist;
     dist->show();
+}
+
+void MainWindow::on_modifypath_clicked()
+{
+    modifypath* mod = new modifypath;
+    mod->show();
+}
+
+void MainWindow::on_deletepath_clicked()
+{
+    erasepath* era = new erasepath;
+    era->show();
 }

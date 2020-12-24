@@ -40,8 +40,8 @@ class Citys {
     int eraseCity(string);
 
     int addPath(string,string,int,double,double,double);
-    int revisePath();
-    int erasePath();
+    int revisePath(string,string,int,double,double,double);
+    int erasePath(string,string,int);
 
     vector<string> findCheapestPath(string,string,int);
     vector<string> findFastestPath(string,string,int);

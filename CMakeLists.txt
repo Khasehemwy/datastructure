@@ -85,6 +85,12 @@ else()
     mindistans.cpp
     mindistans.h
     mindistans.ui
+    modifypath.cpp
+    modifypath.h
+    modifypath.ui
+    erasepath.cpp
+    erasepath.h
+    erasepath.ui
     ${TS_FILES}
   )
 endif()

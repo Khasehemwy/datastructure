@@ -46,6 +46,9 @@ class Citys {
     vector<string> findCheapestPath(string,string,int);
     vector<string> findFastestPath(string,string,int);
     // int  floyd();
+
+    friend std::ofstream& operator<<(std::ofstream&, Citys&);
+    friend std::ifstream& operator>>(std::ifstream&, Citys&);
 };
 
 extern Citys cities;

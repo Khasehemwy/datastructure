@@ -7,6 +7,9 @@
 #include "mincost.h"
 #include "mindist.h"
 #include "./ui_mainwindow.h"
+#include "Class.h"
+
+extern Citys cities;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,6 +20,9 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    std::ofstream fout("data.txt");
+    fout<<cities;
+    fout.close();
     delete ui;
 }
 

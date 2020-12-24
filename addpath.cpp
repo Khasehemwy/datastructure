@@ -19,7 +19,7 @@ void addpath::on_buttonBox_accepted()
     cities.addPath(ui->start->text().toStdString(),
                    ui->end->text().toStdString(),
                    ui->method->currentIndex(),
-                   ui->dist->text().toInt(),
-                   ui->cost->text().toInt(),
-                   ui->time->text().toInt());
+                   ui->dist->text().toDouble(),
+                   ui->cost->text().toDouble(),
+                   ui->time->text().toDouble());
 }

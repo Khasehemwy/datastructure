@@ -1,54 +1,52 @@
 #pragma once
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-class Path {
-   public:
+class Path
+{
+public:
     int mode;
     string start, end;
-    double len, cost, time;
+    double dist, cost, time;
 
     int inputInfo();
 };
 
-class City {
-   public:
+class City
+{
+public:
     string name;
-    map<int, vector<Path> > path;
-    // map[mode,paths];
+    map<int, vector<Path>> path;
 
-    double dis[5];
+    double dist[5];
     double totalCost, totalTime;
     string fromWhichCity;
-    int vis;
+    int visited;
 
-    int findPath(Path& targetPath);
+    int findPath(const Path &targetPath);
 };
 
-class Citys {
-    int cityNumber;
+class Cities
+{
     map<string, int> mp;
-    int floydFinished = 0;
-    // int changed=0;
-   public:
-    vector<City> citys;
+public:
+    vector<City> cities;
 
-    Citys();
+    Cities();
 
     void addCity(string);
-    int reviseCityName(string, string);
-    int eraseCity(string);
+    int modifyCityName(string, string);
+    int removeCity(string);
 
-    int addPath(string,string,int,double,double,double);
-    int revisePath(string,string,int,double,double,double);
-    int erasePath(string,string,int);
+    int addPath(string, string, int, double, double, double);
+    int modifyPath(string,string,int,double,double,double);
+    int removePath(string,string,int);
 
-    vector<string> findCheapestPath(string,string,int);
-    vector<string> findFastestPath(string,string,int);
-    // int  floyd();
+    vector<string> findCheapestPath(string, string, int);
+    vector<string> findFastestPath(string, string, int);
 
-    friend std::ofstream& operator<<(std::ofstream&, Citys&);
-    friend std::ifstream& operator>>(std::ifstream&, Citys&);
+    friend std::ofstream& operator<<(std::ofstream&, Cities&);
+    friend std::ifstream& operator>>(std::ifstream&, Cities&);
 };
 
-extern Citys cities;
+extern Cities cities;

@@ -16,7 +16,7 @@ modifyname::~modifyname()
 
 void modifyname::on_buttonBox_accepted()
 {
-    cities.reviseCityName(ui->oldname->text().toStdString(),ui->newname->text().toStdString());
+    cities.modifyCityName(ui->oldname->text().toStdString(),ui->newname->text().toStdString());
 }
 
 void modifyname::on_buttonBox_rejected()

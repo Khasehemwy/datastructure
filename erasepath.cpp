@@ -16,7 +16,7 @@ erasepath::~erasepath()
 
 void erasepath::on_buttonBox_accepted()
 {
-    cities.erasePath(ui->start->text().toStdString(),
+    cities.removePath(ui->start->text().toStdString(),
                      ui->end->text().toStdString(),
                      ui->method->currentIndex());
 }

@@ -1,67 +1,82 @@
 #include "Include.h"
 
-// void Citys::scanCityNumber()
-// {
-//     cin>>this->cityNumber;
-// }
-
-Citys::Citys() {
-    // Let input start at 1
-    City guard;
-    citys.push_back(guard);
-    //
+int City::findPath(const Path &targetPath)
+// Returns the index of the target path, if it does not exist, return -1.
+{
+    int mode = targetPath.mode;
+    for (int i = 0; i < this->path[mode].size(); i++)
+    {
+        auto &tempPath = path[mode][i];
+        if (tempPath.end == targetPath.end)
+        {
+            return i;
+        }
+    }
+    return -1;
 }
 
-void Citys::addCity(string name) {
+Cities::Cities()
+{
+    // Let index start at 1
+    City guard;
+    cities.push_back(guard);
+}
+
+void Cities::addCity(string name)
+{
     City city;
     city.name = name;
-    this->citys.push_back(city);
-    this->mp[city.name] = this->citys.size() - 1;
+    this->cities.push_back(city);
+    this->mp[city.name] = this->cities.size() - 1;
 }
 
-int Citys::reviseCityName(string oldname, string newname) {
-    if (!mp[oldname]) {
+int Cities::modifyCityName(string oldname, string newname)
+{
+    if (!mp[oldname])
+    {
         return 0;
     }
-    this->citys[mp[oldname]].name = newname;
+    this->cities[mp[oldname]].name = newname;
     mp[newname] = mp[oldname];
     mp.erase(mp.find(oldname));
     return 1;
 }
 
-int Citys::eraseCity(string name) {
-    if (!mp[name]) {
+int Cities::removeCity(string name)
+{
+    if (!mp[name])
+    {
         return 0;
     }
     mp.erase(mp.find(name));
     return 1;
 }
 
-int Citys::addPath(string start, string end, int mode, double dist, double cost,
-                   double time) {
-    if (!mp[start]) {
+int Cities::addPath(string start, string end, int mode, double dist, double cost, double time)
+{
+    if (!mp[start])
+    {
         return 0;
     }
-    if (!mp[end]) {
+    if (!mp[end])
+    {
         return 0;
     }
-    int startIndex, endIndex;
-    startIndex = mp[start];
-    endIndex = mp[end];
+    int startIndex = mp[start];
 
     Path tmpPath;
     tmpPath.start = start;
     tmpPath.end = end;
     tmpPath.mode = mode;
-    tmpPath.len = dist;
+    tmpPath.dist = dist;
     tmpPath.cost = cost;
     tmpPath.time = time;
 
-    citys[startIndex].path[mode].push_back(tmpPath);
+    cities[startIndex].path[mode].push_back(tmpPath);
     return 1;
 }
 
-int Citys::revisePath(string start, string end, int mode, double dist, double cost,
+int Cities::modifyPath(string start, string end, int mode, double dist, double cost,
                       double time) {
     Path targetPath;
     targetPath.start=start;
@@ -71,21 +86,21 @@ int Citys::revisePath(string start, string end, int mode, double dist, double co
         return -1;
     }
     int indexOfCity = mp[targetPath.start];
-    int indexOfPath = this->citys[indexOfCity].findPath(targetPath);
+    int indexOfPath = this->cities[indexOfCity].findPath(targetPath);
     if (indexOfPath == -1) {
         return -1;
     }
     targetPath.start=start;
     targetPath.end=end;
     targetPath.mode=mode;
-    targetPath.len=dist;
+    targetPath.dist=dist;
     targetPath.cost=cost;
     targetPath.time=time;
-    this->citys[indexOfCity].path[targetPath.mode][indexOfPath] = targetPath;
+    this->cities[indexOfCity].path[targetPath.mode][indexOfPath] = targetPath;
     return 1;
 }
 
-int Citys::erasePath(string start,string end,int mode) {
+int Cities::removePath(string start,string end,int mode) {
     Path targetPath;
     targetPath.start=start;
     targetPath.end=end;
@@ -94,142 +109,93 @@ int Citys::erasePath(string start,string end,int mode) {
         return -1;
     }
     int indexOfCity = mp[targetPath.start];
-    int indexOfPath = this->citys[indexOfCity].findPath(targetPath);
+    int indexOfPath = this->cities[indexOfCity].findPath(targetPath);
     if (indexOfPath == -1) {
         return -1;
     }
     vector<Path>::iterator it =
-        this->citys[indexOfCity].path[targetPath.mode].begin();
-    for (int i = 1; i <= indexOfPath; i++) it++;
-    this->citys[indexOfCity].path[targetPath.mode].erase(it);
+        this->cities[indexOfCity].path[targetPath.mode].begin();
+    for (int i = 1; i <= indexOfPath; i++)
+        ++it;
+    this->cities[indexOfCity].path[targetPath.mode].erase(it);
     return 1;
 }
 
-struct Int {
+struct Node
+{
     string name;
-    int id;
-    double dis;
+    int index;
+    double dist;
 };
-bool operator<(const Int& aa, const Int& bb) { return aa.dis > bb.dis; }
-vector<string> Citys::findCheapestPath(string start, string end, int mk) {
+bool operator<(const Node &a, const Node &b) { return a.dist > b.dist; }
+vector<string> Cities::findCheapestPath(string start, string end, int mode)
+{
     vector<string> ans;
-    if (!mp[start]) {
+    if (!mp[start])
+    {
         return ans;
     }
     double transitTime[3] = {0, 2, 1};
-    int n = this->citys.size() - 1;
-    for (int i = 1; i <= n; i++) {
-        this->citys[i].dis[mk] = INF;
-        this->citys[i].vis = 0;
-        this->citys[i].totalCost = this->citys[i].totalTime = 0;
+    int n = this->cities.size() - 1;
+    for (int i = 1; i <= n; i++)
+    {
+        this->cities[i].dist[mode] = INF;
+        this->cities[i].visited = 0;
+        this->cities[i].totalCost = this->cities[i].totalTime = 0;
     }
-    this->citys[mp[start]].dis[mk] = 0;
+    this->cities[mp[start]].dist[mode] = 0;
 
-    priority_queue<Int> q;
-    q.push({start, mp[start], 0});
-    while (!q.empty()) {
-        Int now = q.top();
-        q.pop();
-        if (this->citys[now.id].vis) continue;
-        this->citys[now.id].vis = 1;
-        for (auto& to : this->citys[now.id].path[mk]) {
-            if (this->citys[now.id].dis[mk] + to.cost <
-                this->citys[mp[to.end]].dis[mk]) {
-                this->citys[mp[to.end]].dis[mk] =
-                    this->citys[now.id].dis[mk] + to.cost;
-                this->citys[mp[to.end]].fromWhichCity = now.name;
-                this->citys[mp[to.end]].totalCost =
-                    this->citys[now.id].totalCost + to.cost;
-                this->citys[mp[to.end]].totalTime =
-                    this->citys[now.id].totalTime + to.time + transitTime[mk];
-                q.push({to.end, mp[to.end],
-                        this->citys[mp[to.end]].dis[mk]});
+    priority_queue<Node> pq;
+    pq.push({start, mp[start], 0});
+    while (!pq.empty())
+    {
+        Node now = pq.top();
+        pq.pop();
+        if (this->cities[now.index].visited)
+            continue;
+        this->cities[now.index].visited = 1;
+        for (auto &to : this->cities[now.index].path[mode])
+        {
+            if (this->cities[now.index].dist[mode] + to.cost <
+                this->cities[mp[to.end]].dist[mode])
+            {
+                this->cities[mp[to.end]].dist[mode] =
+                    this->cities[now.index].dist[mode] + to.cost;
+                this->cities[mp[to.end]].fromWhichCity =
+                    now.name;
+                this->cities[mp[to.end]].totalCost =
+                    this->cities[now.index].totalCost + to.cost;
+                this->cities[mp[to.end]].totalTime =
+                    this->cities[now.index].totalTime + to.time +
+                    transitTime[mode];
+                pq.push({to.end, mp[to.end],
+                        this->cities[mp[to.end]].dist[mode]});
             }
         }
     }
 
-    if (this->citys[mp[end]].dis[mk] == INF) {
+    if (this->cities[mp[end]].dist[mode] == INF)
+    {
         return ans;
     }
 
-    queue<int> q1;
-    q1.push(mp[end]);
-    while (!q1.empty()) {
-        int x = q1.front();
-        q1.pop();
-        ans.push_back(this->citys[x].name);
-        if (this->citys[mp[this->citys[x].fromWhichCity]].dis[mk] != 0)
-            q1.push(mp[this->citys[x].fromWhichCity]);
+    queue<int> q;
+    q.push(mp[end]);
+    while (!q.empty())
+    {
+        int x = q.front();
+        q.pop();
+        ans.push_back(this->cities[x].name);
+        if (this->cities[mp[this->cities[x].fromWhichCity]].dist[mode] != 0)
+            q.push(mp[this->cities[x].fromWhichCity]);
     }
     ans.push_back(start);
-    ans.push_back(to_string(this->citys[mp[end]].totalCost));
-    ans.push_back(to_string(this->citys[mp[end]].totalTime - transitTime[mk]));
+    ans.push_back(to_string(this->cities[mp[end]].totalCost));
+    ans.push_back(to_string(this->cities[mp[end]].totalTime - transitTime[mode]));
     return ans;
 }
 
-vector<string> Citys::findFastestPath(string start, string end, int mk) {
-    vector<string> ans;
-    if (!mp[start]) {
-        return ans;
-    }
-    if (this->floydFinished) {
-        // TODO
-    } else {
-        double transitTime[3] = {0, 2, 1};
-        int n = this->citys.size() - 1;
-        for (int i = 1; i <= n; i++) {
-            this->citys[i].dis[mk] = INF;
-            this->citys[i].vis = 0;
-            this->citys[i].totalCost = this->citys[i].totalTime = 0;
-        }
-        this->citys[mp[start]].dis[mk] = 0;
-
-        priority_queue<Int> q;
-        q.push({start, mp[start], 0});
-        while (!q.empty()) {
-            Int now = q.top();
-            q.pop();
-            if (this->citys[now.id].vis) continue;
-            this->citys[now.id].vis = 1;
-            for (auto& to : this->citys[now.id].path[mk]) {
-                if (this->citys[now.id].dis[mk] + to.time + transitTime[mk] <
-                    this->citys[mp[to.end]].dis[mk]) {
-                    this->citys[mp[to.end]].dis[mk] =
-                        this->citys[now.id].dis[mk] + to.time + transitTime[mk];
-                    this->citys[mp[to.end]].fromWhichCity = now.name;
-                    this->citys[mp[to.end]].totalCost =
-                        this->citys[now.id].totalCost + to.cost;
-                    this->citys[mp[to.end]].totalTime =
-                        this->citys[now.id].totalTime + to.time +
-                        transitTime[mk];
-                    q.push({to.end, mp[to.end],
-                            this->citys[mp[to.end]].dis[mk]});
-                }
-            }
-        }
-
-        if (this->citys[mp[end]].dis[mk] == INF) {
-            return ans;
-        }
-
-        queue<int> q1;
-        q1.push(mp[end]);
-        while (!q1.empty()) {
-            int x = q1.front();
-            q1.pop();
-            ans.push_back(this->citys[x].name);
-            if (this->citys[mp[this->citys[x].fromWhichCity]].dis[mk] != 0)
-                q1.push(mp[this->citys[x].fromWhichCity]);
-        }
-        ans.push_back(start);
-        ans.push_back(to_string(this->citys[mp[end]].totalCost));
-        ans.push_back(
-            to_string(this->citys[mp[end]].totalTime - transitTime[mk]));
-        return ans;
-    }
-}
-
-std::ifstream& operator>>(std::ifstream& istr, Citys& c) {
+std::ifstream& operator>>(std::ifstream& istr, Cities& c) {
     int n;
     string name;
     string start,end;
@@ -246,73 +212,91 @@ std::ifstream& operator>>(std::ifstream& istr, Citys& c) {
     return istr;
 }
 
-std::ofstream& operator<<(std::ofstream& ostr, Citys& c) {
-    ostr<<c.citys.size()-1<<endl;
-    for(int i=1;i<c.citys.size();i++) {
-        ostr<<c.citys[i].name<<endl;
+std::ofstream& operator<<(std::ofstream& ostr, Cities& c) {
+    ostr<<c.cities.size()-1<<endl;
+    for(int i=1;i<c.cities.size();i++) {
+        ostr<<c.cities[i].name<<endl;
     }
-    for(int i=0;i<c.citys.size();i++) {
-        for(int j=0;j<c.citys[i].path.size();j++) {
-            for(int k=0;k<c.citys[i].path[j].size();k++) {
-                ostr<<c.citys[i].path[j][k].start<<" "
-                   <<c.citys[i].path[j][k].end<<" "
-                   <<c.citys[i].path[j][k].mode<<" "
-                   <<c.citys[i].path[j][k].len<<" "
-                   <<c.citys[i].path[j][k].cost<<" "
-                   <<c.citys[i].path[j][k].time<<endl;
+    for(int i=0;i<c.cities.size();i++) {
+        for(int j=0;j<c.cities[i].path.size();j++) {
+            for(int k=0;k<c.cities[i].path[j].size();k++) {
+                ostr<<c.cities[i].path[j][k].start<<" "
+                   <<c.cities[i].path[j][k].end<<" "
+                   <<c.cities[i].path[j][k].mode<<" "
+                   <<c.cities[i].path[j][k].dist<<" "
+                   <<c.cities[i].path[j][k].cost<<" "
+                   <<c.cities[i].path[j][k].time<<endl;
             }
         }
     }
     return ostr;
 }
 
-// int Citys::floyd()
-// {
-//     int a[100][100];
-//     for(int k=1;k<=n;k++){
-//         for(int i=1;i<=n;i++){
-//             for(int j=1;j<=n;j++){
-//                 a[i][j] = min(a[i][j],a[i][k]+a[k][j]);
-//             }
-//         }
-//     }
-//     return 1;
-// }
-
-//*-----------------------------------------------------------------------*/
-
-//************************************************************************/
-//*------------------------------City-------------------------------------*/
-int City::findPath(Path& targetPath)
-// Returns the index of the target path, if it does not exist, return -1.
+vector<string> Cities::findFastestPath(string start, string end, int mode)
 {
-    for (int i = 0; i < this->path[targetPath.mode].size(); i++) {
-        auto& checkingPath = path[targetPath.mode][i];
-        if (checkingPath.end == targetPath.end) {
-            return i;
+    vector<string> ans;
+    if (!mp[start])
+    {
+        return ans;
+    }
+    double transitTime[3] = {0, 2, 1};
+    int n = this->cities.size() - 1;
+    for (int i = 1; i <= n; i++)
+    {
+        this->cities[i].dist[mode] = INF;
+        this->cities[i].visited = 0;
+        this->cities[i].totalCost = this->cities[i].totalTime = 0;
+    }
+    this->cities[mp[start]].dist[mode] = 0;
+
+    priority_queue<Node> pq;
+    pq.push({start, mp[start], 0});
+    while (!pq.empty())
+    {
+        Node now = pq.top();
+        pq.pop();
+        if (this->cities[now.index].visited)
+            continue;
+        this->cities[now.index].visited = 1;
+        for (auto &to : this->cities[now.index].path[mode])
+        {
+            if (this->cities[now.index].dist[mode] + to.time +
+                    transitTime[mode] <
+                this->cities[mp[to.end]].dist[mode])
+            {
+                this->cities[mp[to.end]].dist[mode] =
+                    this->cities[now.index].dist[mode] + to.time +
+                    transitTime[mode];
+                this->cities[mp[to.end]].fromWhichCity =
+                    now.name;
+                this->cities[mp[to.end]].totalCost =
+                    this->cities[now.index].totalCost + to.cost;
+                this->cities[mp[to.end]].totalTime =
+                    this->cities[now.index].totalTime + to.time +
+                    transitTime[mode];
+                pq.push({to.end, mp[to.end],
+                        this->cities[mp[to.end]].dist[mode]});
+            }
         }
     }
-    return -1;
+
+    if (this->cities[mp[end]].dist[mode] == INF)
+    {
+        return ans;
+    }
+
+    queue<int> q;
+    q.push(mp[end]);
+    while (!q.empty())
+    {
+        int x = q.front();
+        q.pop();
+        ans.push_back(this->cities[x].name);
+        if (this->cities[mp[this->cities[x].fromWhichCity]].dist[mode] != 0)
+            q.push(mp[this->cities[x].fromWhichCity]);
+    }
+    ans.push_back(start);
+    ans.push_back(to_string(this->cities[mp[end]].totalCost));
+    ans.push_back(to_string(this->cities[mp[end]].totalTime - transitTime[mode]));
+    return ans;
 }
-
-//*-----------------------------------------------------------------------*/
-
-//*************************************************************************/
-//*------------------------------Path-------------------------------------*/
-int Path::inputInfo() {
-    printf("Enter the start : \n");
-    cin >> this->start;
-    printf("Enter the end : \n");
-    cin >> this->end;
-    printf("Enter the travel mode (1 for airplane and 2 for train) : \n");
-    cin >> this->mode;
-    printf("Enter the len : \n");
-    cin >> this->len;
-    printf("Enter the cost of money : \n");
-    cin >> this->cost;
-    printf("Enter the time : \n");
-    cin >> this->time;
-    return 0;
-}
-
-//*-----------------------------------------------------------------------*/

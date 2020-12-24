@@ -2,7 +2,7 @@
 #include "Class.h"
 #include <QApplication>
 
-Citys cities;
+Cities cities;
 
 int main(int argc, char *argv[])
 {

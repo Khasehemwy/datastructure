@@ -16,7 +16,7 @@ modifypath::~modifypath()
 
 void modifypath::on_buttonBox_accepted()
 {
-    cities.revisePath(ui->start->text().toStdString(),
+    cities.modifyPath(ui->start->text().toStdString(),
                       ui->end->text().toStdString(),
                       ui->method->currentIndex(),
                       ui->dist->text().toDouble(),

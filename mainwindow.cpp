@@ -11,7 +11,7 @@
 #include "./ui_mainwindow.h"
 #include "Class.h"
 
-extern Citys cities;
+extern Cities cities;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)

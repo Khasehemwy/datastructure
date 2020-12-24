@@ -16,5 +16,5 @@ removecity::~removecity()
 
 void removecity::on_buttonBox_accepted()
 {
-    cities.eraseCity(ui->name->text().toStdString());
+    cities.removeCity(ui->name->text().toStdString());
 }
